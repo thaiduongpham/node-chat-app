@@ -1,6 +1,7 @@
 const path = require('path');
 const http = require('http');
 const express = require('express');
+const {generateMessage} = require('./utils/message');
 
 const publicPath = path.join(__dirname, '../public');
 var port = process.env.PORT || 3000; // setup for heroku as prod env
@@ -11,28 +12,16 @@ const socketIO = require('socket.io');
 var io = socketIO(server);
 
 io.on('connection', (socket) => {
-  console.log('new user connected');
+  console.log('New user connected');
   
-  socket.emit('newMessage', {
-    from: 'Admin',
-    text: 'Welcome to Chat App!',
-    createdAt: new Date().getTime()
-  });
+  socket.emit('newMessage', generateMessage('Admin', 'Welcome to Chat App!'));
 
-  socket.broadcast.emit('newMessage', {
-    from: 'Admin',
-    text: 'New User joined!',
-    createdAt: new Date().getTime()
-  })
+  socket.broadcast.emit('newMessage', generateMessage('Admin', 'New User joined!'));
 
-  socket.on('createMessage', (newMessage) => {
-    console.log('newMessage: ', newMessage);
+  socket.on('createMessage', (message) => {
+    console.log('newMessage: ', message);
 
-    io.emit('newMessage', {
-      from: newMessage.to,
-      text: newMessage.text,
-      createdAt: new Date().getTime()
-    });
+    io.emit('newMessage', generateMessage(message.from, message.text));
 
     // socket.broadcast.emit('newMessage', {
     //   from: newMessage.to,

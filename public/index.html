@@ -3,10 +3,19 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <script src="/js/libs/jquery-3.3.1.min.js"></script>
   </head>
 <body>
   <p>Welcome to chat app</p>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/index.js"></script>
+
+  <ol id="messages"></ol>
+
+  <form id="message-form">
+    <input type="text" name="message" placeholder="Message"/>
+    <button>Send</button>
+  </form>
+
 </body>
 </html>

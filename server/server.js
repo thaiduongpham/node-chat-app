@@ -1,7 +1,7 @@
 const path = require('path');
 const http = require('http');
 const express = require('express');
-const {generateMessage} = require('./utils/message');
+const {generateMessage, generateLocationMessage} = require('./utils/message');
 
 const publicPath = path.join(__dirname, '../public');
 var port = process.env.PORT || 3000; // setup for heroku as prod env
@@ -23,18 +23,11 @@ io.on('connection', (socket) => {
 
     io.emit('newMessage', generateMessage(message.from, message.text));
     callback('This is from the server');
-
-    // socket.broadcast.emit('newMessage', {
-    //   from: newMessage.to,
-    //   text: newMessage.text,
-    //   createdAt: new Date().getTime()
-    // });
-
   });
 
-  // socket.on('createEmail', (newEmail) => {
-  //   console.log('createEmail: ', newEmail);
-  // })
+  socket.on('createLocationMessage', (coords) => {
+    io.emit('newLocationMessage', generateLocationMessage('Admin', `${coords.latitude}`, `${coords.longitude}`));
+  });
 
   socket.on('disconnect', () => {
     console.log('User was disconnected.');
